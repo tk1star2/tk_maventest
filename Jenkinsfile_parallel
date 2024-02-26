@@ -1,0 +1,51 @@
+def builds = [:]        // map
+builds["p1"] = {
+  node('p1') {
+    stage("git") {
+        git 'https://github.com/hyunil-shin/java-maven-junit-helloworld.git'
+    }
+  }
+}
+
+builds["p2"] = {
+  node('p2') {    
+    stage('jdk8') {
+      def jdk = tool name: 'openjdk8', type: 'jdk'
+      withEnv(["JAVA_HOME=${jdk}", "PATH+JDK=${jdk}/bin", "PATH+MAVEN=${tool 'apache-maven-3.6.0'}/bin"]) {
+          sh "mvn clean test"
+      }
+    } 
+  }
+}
+
+builds["p3"] = {
+    node('p2') {    
+      stage('jdk11') {
+        def jdk = tool name: 'openjdk11', type: 'jdk'
+        withEnv(["JAVA_HOME=${jdk}", "PATH+JDK=${jdk}/bin", "PATH+MAVEN=${tool 'apache-maven-3.6.0'}/bin"]) {
+            sh "mvn clean test"
+        }
+      }     
+    }
+}
+
+builds["p4"] = {
+    node('p2') {    
+      stage('jdk12') {
+        def jdk = tool name: 'openjdk12', type: 'jdk'
+        withEnv(["JAVA_HOME=${jdk}", "PATH+JDK=${jdk}/bin", "PATH+MAVEN=${tool 'apache-maven-3.6.0'}/bin"]) {
+            sh "mvn clean test"
+        }
+      }
+    }
+}
+
+builds["p5"] = {
+    node('p2') {
+      stage('report') {
+        // No Problem ???
+        junit 'target/surefire-reports/*.xml'        
+      }
+    }
+}
+parallel builds
