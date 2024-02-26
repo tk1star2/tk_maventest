@@ -1,18 +1,14 @@
-properties([parameters([string(defaultValue: 'test', description: 'test or verify', name: 'testType', trim: false)])])
+properties([parameters([string(defaultValue: 'james', description: '', name: 'YourName', trim: true)])])
 
-node {
+stage 'Compile'
+node() {
     checkout scm
-    
-    stage('build') {
-        //withEnv(["PATH+MAVEN=${tool 'apache-maven-3.3.9'}/bin"]) {
-        withEnv(["PATH+MAVEN=${tool 'mvn-3.8.6'}/bin"]) {
-            sh 'mvn --version'
-            sh "mvn clean ${params.testType}"
-        }
+    // use for non multibranch: git 'https://github.com/amuniz/maven-helloworld.git'
+    def mvnHome = tool 'mvn-3.6.0'
+    try {
+        sh "${mvnHome}/bin/mvn clean test"
+    }catch(e) {
+        echo "exception"
     }
-    
-    stage('report') {
-        junit 'target/surefire-reports/*.xml'
-        jacoco execPattern: 'target/**.exec'
-    }
+    stash 'working-copy'
 }
