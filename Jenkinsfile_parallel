@@ -1,6 +1,6 @@
 def builds = [:]        // map
 builds["p1"] = {
-  node('master') {
+  node() {
     stage("git") {
         git 'https://github.com/hyunil-shin/java-maven-junit-helloworld.git'
     }
@@ -8,7 +8,7 @@ builds["p1"] = {
 }
 
 builds["p2"] = {
-  node('') {    
+  node() {    
     stage('jdk8') {
       def jdk = tool name: 'openjdk8', type: 'jdk'
       withEnv(["JAVA_HOME=${jdk}", "PATH+JDK=${jdk}/bin", "PATH+MAVEN=${tool 'apache-maven-3.6.0'}/bin"]) {
@@ -19,7 +19,7 @@ builds["p2"] = {
 }
 
 builds["p3"] = {
-    node('') {    
+    node() {    
       stage('jdk11') {
         def jdk = tool name: 'openjdk11', type: 'jdk'
         withEnv(["JAVA_HOME=${jdk}", "PATH+JDK=${jdk}/bin", "PATH+MAVEN=${tool 'apache-maven-3.6.0'}/bin"]) {
@@ -30,7 +30,7 @@ builds["p3"] = {
 }
 
 builds["p4"] = {
-    node('') {    
+    node() {    
       stage('jdk12') {
         def jdk = tool name: 'openjdk12', type: 'jdk'
         withEnv(["JAVA_HOME=${jdk}", "PATH+JDK=${jdk}/bin", "PATH+MAVEN=${tool 'apache-maven-3.6.0'}/bin"]) {
@@ -41,7 +41,7 @@ builds["p4"] = {
 }
 
 builds["p5"] = {
-    node('') {
+    node() {
       stage('report') {
         // No Problem ???
         junit 'target/surefire-reports/*.xml'        
